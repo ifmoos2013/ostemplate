@@ -24,12 +24,16 @@ $(KERNEL): $(OBJ)
 	$(LD) $(LDFLAGS) $^ -o $@
 
 %.a: FORCE
-	$(MAKE) -s -C $(shell dirname $@)
+	@echo "Building $(shell dirname $@)"
+	@$(MAKE) --no-print-directory -C $(shell dirname $@)
 
 FORCE:
 
 clean:
-	for dir in "$(SUBMODULES)" ; do $(MAKE) clean -s -C kernel ; done
+	@for dir in $(SUBMODULES) ; do \
+		echo "Cleaning $$dir"; \
+		$(MAKE) --no-print-directory clean -C $$dir; \
+	done
 	rm -f $(KERNEL)
 
 .PHONY: all clean
