@@ -8,11 +8,15 @@ global tty_set_style
 
 ;;; Clear the screen
 tty_clear:
+	push edi
+	push ecx
+
 	mov edi, video_start
-	mov ecx, 4000
-	.loop:
-	mov byte [edi + ecx], 0
-	loop .loop
+	mov ecx, video_memory_size_d
+	mov eax, 0
+	repe stosd
+	pop ecx
+	pop edi
 	ret
 
 ;;; Set text style
@@ -64,14 +68,29 @@ tty_putc:
 
 ;;; Change cursor position to the start of the next line.
 tty_endl:
-	;; if cursor_pos = 80 * x + y then cursor_pos := 80 * (x + 1)
-	;; TODO
+	push eax
+	push edx
+	push ecx
+
+	mov dx, 0
+	mov ax, [cursor_pos]
+	mov cx, screen_width
+	div cx
+	sub [cursor_pos], dx
+	add word [cursor_pos], screen_width
+
+	pop ecx
+	pop edx
+	pop eax
 	ret
 
 ;;; Address of the start of the video memory
 video_start: equ 0xB8000
+screen_width: equ 80
+screen_height: equ 25
+video_memory_size_d: equ (screen_width * screen_height) / 2
 
 section .data
-;;; Cursor position (assuming that screen has size 80x25)
 text_style: db 0x07
+align 4
 cursor_pos: dw 0
