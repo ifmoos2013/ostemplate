@@ -1,5 +1,5 @@
 export AS = yasm
-export ASFLAGS = -f elf32
+export ASFLAGS = -f elf32 -I $(shell pwd)
 
 export LD = ld
 export LDFLAGS = -m elf_i386
@@ -11,7 +11,7 @@ QEMU = qemu-system-x86_64
 QEMUFLAGS = -m 1024
 
 KERNEL = mylinux
-SUBMODULES = boot kernel
+SUBMODULES = boot kernel tty
 
 OBJ = $(foreach DIR, $(SUBMODULES), $(DIR)/$(DIR).a)
 

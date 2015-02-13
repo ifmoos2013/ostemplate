@@ -30,10 +30,10 @@ _start:
 	; To set up a stack, we simply set the esp register to point to the top of
 	; our stack (as it grows downwards).
 	mov esp, stack_top
- 
+
 	; Call our kernel's main function
-	extern kmain
-	call kmain
+	extern kernel_main
+	call kernel_main
  
 	; In case the function returns, we'll want to put the computer into an
 	; infinite loop. To do that, we use the clear interrupt ('cli') instruction
